@@ -1,65 +1,68 @@
 const ServicePostgres = require('../services/postgres')
 const _servicepg = new ServicePostgres()
 
-const getUsers =  async (request, response) => {
+const getLocal =  async (request, response) => {
 
-    const sql = 'SELECT * FROM USUARIOS INNER JOIN roles ON roles.idrol = usuarios.idrol'
+    const sql = 'SELECT * FROM LOCALES'
     let responseDB = await _servicepg.execute(sql)
     let rowCount = responseDB.rowCount
     let rows = responseDB.rows
+
     let respondeJSON = {}
     respondeJSON.ok = true
-    respondeJSON.message = 'Users Ok'
+    respondeJSON.message = 'Locales Ok'
     respondeJSON.info = rows
     respondeJSON.metainfo = {total: rowCount}
     response.send(respondeJSON);
 }; 
 
-const postUsers = async (request, response) => {
+const postLocal = async (request, response) => {
     try{
-    let sql = "INSERT INTO public.usuarios (ccusuario, tipo_identificacion, nombre, apellido, correo, celular, clave, idrol)"
-    sql += " VALUES ($1, $2, $3, $4, $5, $6, md5($7), $8);";
+    let sql = "INSERT INTO LOCALES (idlocal, nombrelocal, idlocalidad)"
+    sql += " VALUES ($1, $2, $3);";
     let body = request.body;
     let values = [
-        body.ccusuario,
-        body.tipo_identificacion,
-        body.nombre,
-        body.apellido,
-        body.correo,
-        body.celular,
-        body.clave,
-        body.idrol,
+        body.idlocal,
+        body.nombrelocal,
+        body.idlocalidad,
     ];
 
     await _servicepg.execute(sql, values)
     let respondeJSON = {}
     respondeJSON.ok = true
-    respondeJSON.message = 'User created'
+    respondeJSON.message = 'Local created'
     respondeJSON.info = body
     response.send(respondeJSON);
     }catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while create user.";
+        responseJSON.message = "Error while create local.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
 };
 
-const updateUser =  async (request, response) => {
+/**
+ * Delete user
+ * @param {*} request
+ * @param {Response} response
+ */
+
+const updateLocal =  async (request, response) => {
     try {
         let id = request.params.id;
         let sql =
-          "UPDATE public.usuarios SET celular = $1 WHERE ccusuario = $2;";
+          "UPDATE LOCALES SET nombrelocal = $1, idlocalidad = $2 WHERE idlocal = $3;";
         let body = request.body;
         let values = [
-            body.celular,
+            body.nombrelocal,
+            body.idlocalidad,
             id
         ];
         await _servicepg.execute(sql, values);
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "User updated";
+        responseJSON.message = "Local updated";
         responseJSON.info = body;
         response.send(responseJSON);
         
@@ -67,7 +70,7 @@ const updateUser =  async (request, response) => {
     }catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while update user.";
+        responseJSON.message = "Error while update local.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
@@ -79,25 +82,25 @@ const updateUser =  async (request, response) => {
  * @param {Response} response
  */
 
-const deleteUser =  async (request, response) => {
+const deleteLocal =  async (request, response) => {
     try {
-        let sql = "DELETE FROM usuarios WHERE ccusuario = $1;";
+        let sql = "DELETE FROM LOCALES WHERE idlocal = $1;";
         let id = request.params.id;
         let responseDB = await _servicepg.execute(sql, [id]);
         let rowCount = responseDB.rowCount;
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "Users deleted";
+        responseJSON.message = "Local deleted";
         responseJSON.info = [];
         responseJSON.metainfo = { total: rowCount };
         response.send(responseJSON);
     }catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while delete user.";
+        responseJSON.message = "Error while delete local.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
 };
 
-module.exports = { getUsers, postUsers, updateUser, deleteUser }
+module.exports = { getLocal, postLocal, updateLocal, deleteLocal }

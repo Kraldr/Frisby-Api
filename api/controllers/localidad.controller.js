@@ -1,70 +1,66 @@
 const ServicePostgres = require('../services/postgres')
 const _servicepg = new ServicePostgres()
 
-const getUsers =  async (request, response) => {
+const getLocalidad =  async (request, response) => {
 
-    const sql = 'SELECT * FROM USUARIOS INNER JOIN roles ON roles.idrol = usuarios.idrol'
+    const sql = 'SELECT * FROM LOCALIDAD'
     let responseDB = await _servicepg.execute(sql)
     let rowCount = responseDB.rowCount
     let rows = responseDB.rows
+
+
     let respondeJSON = {}
     respondeJSON.ok = true
-    respondeJSON.message = 'Users Ok'
+    respondeJSON.message = 'Localidades Ok'
     respondeJSON.info = rows
     respondeJSON.metainfo = {total: rowCount}
     response.send(respondeJSON);
 }; 
 
-const postUsers = async (request, response) => {
+const postLocalidad = async (request, response) => {
     try{
-    let sql = "INSERT INTO public.usuarios (ccusuario, tipo_identificacion, nombre, apellido, correo, celular, clave, idrol)"
-    sql += " VALUES ($1, $2, $3, $4, $5, $6, md5($7), $8);";
-    let body = request.body;
-    let values = [
-        body.ccusuario,
-        body.tipo_identificacion,
-        body.nombre,
-        body.apellido,
-        body.correo,
-        body.celular,
-        body.clave,
-        body.idrol,
-    ];
-
-    await _servicepg.execute(sql, values)
-    let respondeJSON = {}
-    respondeJSON.ok = true
-    respondeJSON.message = 'User created'
-    respondeJSON.info = body
-    response.send(respondeJSON);
+        let sql = "INSERT INTO LOCALIDAD (idlocalidad, nombrelocalidad)"
+        sql += " VALUES ($1, $2);";
+        let body = request.body;
+        let values = [
+            body.idlocalidad,
+            body.nombrelocalidad,
+        ];
+    
+        await _servicepg.execute(sql, values)
+        let respondeJSON = {}
+        respondeJSON.ok = true
+        respondeJSON.message = 'Localidad created'
+        respondeJSON.info = body
+        response.send(respondeJSON);
     }catch (error) {
-        let responseJSON = {};
-        responseJSON.ok = false;
-        responseJSON.message = "Error while create user.";
-        responseJSON.info = error;
-        response.status(400).send(responseJSON);
+            let responseJSON = {};
+            responseJSON.ok = false;
+            responseJSON.message = "Error while create localidad.";
+            responseJSON.info = error;
+            response.status(400).send(responseJSON);
     }
 };
 
-const updateUser =  async (request, response) => {
+const updateLocalidad =  async (request, response) => {
     try {
         let id = request.params.id;
         let sql =
-          "UPDATE public.usuarios SET celular = $1 WHERE ccusuario = $2;";
+          "UPDATE LOCALIDAD SET nombrelocalidad = $1 WHERE idlocalidad = $2;";
         let body = request.body;
         let values = [
-            body.celular,
+            body.nombrelocalidad,
             id
         ];
         await _servicepg.execute(sql, values);
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "User updated";
+        responseJSON.message = "Localidad updated";
         responseJSON.info = body;
         response.send(responseJSON);
         
 
-    }catch (error) {
+    } catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
         responseJSON.message = "Error while update user.";
@@ -79,19 +75,19 @@ const updateUser =  async (request, response) => {
  * @param {Response} response
  */
 
-const deleteUser =  async (request, response) => {
+const deleteLocalidad =  async (request, response) => {
     try {
-        let sql = "DELETE FROM usuarios WHERE ccusuario = $1;";
+        let sql = "DELETE FROM LOCALIDAD WHERE idlocalidad = $1;";
         let id = request.params.id;
         let responseDB = await _servicepg.execute(sql, [id]);
         let rowCount = responseDB.rowCount;
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "Users deleted";
+        responseJSON.message = "Localidad deleted";
         responseJSON.info = [];
         responseJSON.metainfo = { total: rowCount };
         response.send(responseJSON);
-    }catch (error) {
+    } catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
         responseJSON.message = "Error while delete user.";
@@ -100,4 +96,4 @@ const deleteUser =  async (request, response) => {
     }
 };
 
-module.exports = { getUsers, postUsers, updateUser, deleteUser }
+module.exports = { getLocalidad, postLocalidad, updateLocalidad, deleteLocalidad }
