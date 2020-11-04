@@ -3,7 +3,7 @@ console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV == 'dev') {
     process.env.USER_DB = "postgres";
     process.env.HOST_DB = "localhost";
-    process.env.DB = "Frisby-Api"
+    process.env.DB = "Frisby-DB"
     process.env.PASSWORD_DB = "123";
     process.env.PORT_DB = 5432;
 }else if (process.env.NODE_ENV == 'production') {

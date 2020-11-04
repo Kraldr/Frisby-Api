@@ -1,66 +1,61 @@
 const ServicePostgres = require('../services/postgres')
 const _servicepg = new ServicePostgres()
 
-const getConvo =  async (request, response) => {
+const getAplicarConvo =  async (request, response) => {
 
-    const sql = 'SELECT * FROM CONVOCATORIA'
+    const sql = 'SELECT * FROM APLICARCONVOCATORIA'
     let responseDB = await _servicepg.execute(sql)
     let rowCount = responseDB.rowCount
     let rows = responseDB.rows
     let respondeJSON = {}
     respondeJSON.ok = true
-    respondeJSON.message = 'Convocatoria Ok'
+    respondeJSON.message = 'Aplicar convocatoria Ok'
     respondeJSON.info = rows
     respondeJSON.metainfo = {total: rowCount}
     response.send(respondeJSON);
 }; 
 
-const postConvo = async (request, response) => {
+const postAplicarConvo = async (request, response) => {
     try{
-    let sql = "INSERT INTO CONVOCATORIA (idConvo, nombreConvo, idlocalidad, idLocal, tipoDeTrabajo)"
-    sql += " VALUES ($1, $2, $3, $4, $5);";
+    let sql = "INSERT INTO APLICARCONVOCATORIA (idaplicarconvo, idaplicarconvo, idconvo)"
+    sql += " VALUES ($1, $2, $3);";
     let body = request.body;
     let values = [
-        body.idConvo,
-        body.nombreConvo,
-        body.idlocalidad,
-        body.idLocal,
-        body.tipoDeTrabajo,
+        body.idaplicarconvo,
+        body.ccusuario,
+        body.idconvo
     ];
 
     await _servicepg.execute(sql, values)
     let respondeJSON = {}
     respondeJSON.ok = true
-    respondeJSON.message = 'Convocatoria created'
+    respondeJSON.message = 'Aplicar convocatoria created'
     respondeJSON.info = body
     response.send(respondeJSON);
     }catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while create Convocatoria.";
+        responseJSON.message = "Error while create Aplicar convocatoria.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
 };
 
-const updateConvo =  async (request, response) => {
+const updateAplicarConvo =  async (request, response) => {
     try {
         let id = request.params.id;
         let sql =
-          "UPDATE CONVOCATORIA SET idConvo = $1, nombreConvo = $2, idlocalidad = $3, idLocal = $4, tipoDeTrabajo = $5 WHERE idConvo = $6;";
+          "UPDATE APLICARCONVOCATORIA SET ccusuario = $1, idconvo = $2 WHERE idaplicarconvo = $3;";
         let body = request.body;
         let values = [
-            body.idConvo,
-            body.nombreConvo,
-            body.idlocalidad,
-            body.idLocal,
-            body.tipoDeTrabajo,
+            body.ccusuario,
+            body.idconvo,
             id
         ];
         await _servicepg.execute(sql, values);
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "CONVOCATORIA updated";
+        responseJSON.message = "Aplicar convocatoria updated";
         responseJSON.info = body;
         response.send(responseJSON);
         
@@ -68,7 +63,7 @@ const updateConvo =  async (request, response) => {
     } catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while update CONVOCATORIA.";
+        responseJSON.message = "Error while update Aplicar convocatoria.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
@@ -80,25 +75,25 @@ const updateConvo =  async (request, response) => {
  * @param {Response} response
  */
 
-const deleteConvo =  async (request, response) => {
+const deleteAplicarConvo =  async (request, response) => {
     try {
-        let sql = "DELETE FROM CONVOCATORIA WHERE idConvo = $1;";
+        let sql = "DELETE FROM APLICARCONVOCATORIA WHERE idConvo = $1;";
         let id = request.params.id;
         let responseDB = await _servicepg.execute(sql, [id]);
         let rowCount = responseDB.rowCount;
         let responseJSON = {};
         responseJSON.ok = true;
-        responseJSON.message = "CONVOCATORIA deleted";
+        responseJSON.message = "Aplicar convocatoria deleted";
         responseJSON.info = [];
         responseJSON.metainfo = { total: rowCount };
         response.send(responseJSON);
     } catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;
-        responseJSON.message = "Error while delete CONVOCATORIA.";
+        responseJSON.message = "Error while delete Aplicar convocatoria.";
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
 };
 
-module.exports = { getConvo, postConvo, updateConvo, deleteConvo }
+module.exports = { getAplicarConvo, postAplicarConvo, updateAplicarConvo, deleteAplicarConvo }
