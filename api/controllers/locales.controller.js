@@ -3,7 +3,6 @@ const _servicepg = new ServicePostgres()
 
 const getLocal =  async (request, response) => {
 
-<<<<<<< HEAD
     try {
         const sql = 'SELECT * FROM LOCALES'
         let responseDB = await _servicepg.execute(sql)
@@ -23,7 +22,6 @@ const getLocal =  async (request, response) => {
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
-=======
     const sql = 'SELECT * FROM LOCALES'
     let responseDB = await _servicepg.execute(sql)
     let rowCount = responseDB.rowCount
@@ -35,7 +33,6 @@ const getLocal =  async (request, response) => {
     respondeJSON.info = rows
     respondeJSON.metainfo = {total: rowCount}
     response.send(respondeJSON);
->>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
 }; 
 
 const postLocal = async (request, response) => {

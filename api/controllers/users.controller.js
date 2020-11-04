@@ -50,35 +50,8 @@ const postUsers = async (request, response) => {
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
-<<<<<<< HEAD
 };
 
-const updateUser =  async (request, response) => {
-    try {
-        let id = request.params.id;
-        let sql =
-          "UPDATE public.usuarios SET celular = $1 WHERE ccusuario = $2;";
-        let body = request.body;
-        let values = [
-            body.celular,
-            id
-        ];
-        await _servicepg.execute(sql, values);
-        let responseJSON = {};
-        responseJSON.ok = true;
-        responseJSON.message = "User updated";
-        responseJSON.info = body;
-        response.send(responseJSON);
-        
-
-    }catch (error) {
-        let responseJSON = {};
-        responseJSON.ok = false;
-        responseJSON.message = "Error while update user.";
-        responseJSON.info = error;
-        response.status(400).send(responseJSON);
-    }
-};
 
 /**
  * Delete user
@@ -86,24 +59,6 @@ const updateUser =  async (request, response) => {
  * @param {Response} response
  */
 
-const deleteUser =  async (request, response) => {
-    try {
-        let sql = "DELETE FROM usuarios WHERE ccusuario = $1;";
-        let id = request.params.id;
-        let responseDB = await _servicepg.execute(sql, [id]);
-        let rowCount = responseDB.rowCount;
-        let responseJSON = {};
-        responseJSON.ok = true;
-        responseJSON.message = "Users deleted";
-        responseJSON.info = [];
-        responseJSON.metainfo = { total: rowCount };
-        response.send(responseJSON);
-    }catch (error) {
-        let responseJSON = {};
-        responseJSON.ok = false;
-        responseJSON.message = "Error while delete user.";
-=======
-};
 
 const updateUser =  async (request, response) => {
     try {
@@ -127,14 +82,12 @@ const updateUser =  async (request, response) => {
         let responseJSON = {};
         responseJSON.ok = false;
         responseJSON.message = "Error while update user.";
->>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
 };
 
 /**
-<<<<<<< HEAD
  * 
  * @param {Request} request
  * @param {*} response
@@ -179,7 +132,6 @@ const deleteUser =  async (request, response) => {
         let responseJSON = {};
         responseJSON.ok = false;
         responseJSON.message = "Error while delete user.";
->>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }

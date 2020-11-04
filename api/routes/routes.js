@@ -7,11 +7,10 @@ const localidadController = require('../controllers/localidad.controller')
 const localController = require('../controllers/locales.controller')
 const ConvoController = require('../controllers/convocatoria.controller')
 const AplicacionesController = require('../controllers/aplicarCovocatoria.controller')
-<<<<<<< HEAD
+
 const AuthController = require('../controllers/auth.controller')
 const authController = require('../controllers/auth.controller')
-=======
->>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
+
 
 router.get('/api/v1', (request, response) => {
     response.send("Hola mundos");
@@ -52,10 +51,7 @@ router
     .put('/api/v1/aplicaciones/:id',  AplicacionesController.updateAplicarConvo)
     .delete('/api/v1/aplicaciones/:id',  AplicacionesController.deleteAplicarConvo)
 
-<<<<<<< HEAD
     .use("/", authController.notFound);
 
 
-=======
->>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
 module.exports = router;
