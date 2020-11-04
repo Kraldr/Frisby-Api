@@ -3,6 +3,7 @@ const _servicepg = new ServicePostgres()
 
 const getLocalidad =  async (request, response) => {
 
+<<<<<<< HEAD
     try {
         const sql = 'SELECT * FROM LOCALIDAD'
         let responseDB = await _servicepg.execute(sql)
@@ -25,6 +26,20 @@ const getLocalidad =  async (request, response) => {
     }
 
     
+=======
+    const sql = 'SELECT * FROM LOCALIDAD'
+    let responseDB = await _servicepg.execute(sql)
+    let rowCount = responseDB.rowCount
+    let rows = responseDB.rows
+
+
+    let respondeJSON = {}
+    respondeJSON.ok = true
+    respondeJSON.message = 'Localidades Ok'
+    respondeJSON.info = rows
+    respondeJSON.metainfo = {total: rowCount}
+    response.send(respondeJSON);
+>>>>>>> 737f131eafcd1766fbcf0000e6a0043c78b2ed4c
 }; 
 
 const postLocalidad = async (request, response) => {
