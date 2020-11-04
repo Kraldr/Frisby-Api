@@ -3,22 +3,32 @@ const _servicepg = new ServicePostgres()
 
 const getUsers =  async (request, response) => {
 
-    const sql = 'SELECT * FROM USUARIOS INNER JOIN roles ON roles.idrol = usuarios.idrol'
-    let responseDB = await _servicepg.execute(sql)
-    let rowCount = responseDB.rowCount
-    let rows = responseDB.rows
+    try {
+        const sql = 'SELECT * FROM USUARIOS INNER JOIN roles ON roles.idrol = usuarios.idrol'
+        let responseDB = await _servicepg.execute(sql)
+        let rowCount = responseDB.rowCount
+        let rows = responseDB.rows
 
-    rows = rows.map((x) => {
+        rows = rows.map((x) => {
         delete x.clave
         return x;
-    });
+        });
 
-    let respondeJSON = {}
-    respondeJSON.ok = true
-    respondeJSON.message = 'Users Ok'
-    respondeJSON.info = rows
-    respondeJSON.metainfo = {total: rowCount}
-    response.send(respondeJSON);
+        let respondeJSON = {}
+        respondeJSON.ok = true
+        respondeJSON.message = 'Users Ok'
+        respondeJSON.info = rows
+        respondeJSON.metainfo = {total: rowCount}
+        response.send(respondeJSON);
+    }catch (error) {
+        let responseJSON = {};
+        responseJSON.ok = false;
+        responseJSON.message = "Error while create user.";
+        responseJSON.info = error;
+        response.status(400).send(responseJSON);
+    }
+
+    
 }; 
 
 const postUsers = async (request, response) => {
@@ -110,11 +120,14 @@ const saveCV =  async (request, response) => {
         let responseJSON = {};
         responseJSON.ok = false;
         responseJSON.message = "Error while create CV.";
-=======
+    }
+}
+
+/** 
  * Delete user
  * @param {Request} request
  * @param {Response} response
- */
+*/
 
 const deleteUser =  async (request, response) => {
     try {

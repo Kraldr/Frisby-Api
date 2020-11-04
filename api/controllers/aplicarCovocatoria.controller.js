@@ -3,16 +3,24 @@ const _servicepg = new ServicePostgres()
 
 const getAplicarConvo =  async (request, response) => {
 
-    const sql = 'SELECT * FROM APLICARCONVOCATORIA'
-    let responseDB = await _servicepg.execute(sql)
-    let rowCount = responseDB.rowCount
-    let rows = responseDB.rows
-    let respondeJSON = {}
-    respondeJSON.ok = true
-    respondeJSON.message = 'Aplicar convocatoria Ok'
-    respondeJSON.info = rows
-    respondeJSON.metainfo = {total: rowCount}
-    response.send(respondeJSON);
+    try {
+        const sql = 'SELECT * FROM APLICARCONVOCATORIA'
+        let responseDB = await _servicepg.execute(sql)
+        let rowCount = responseDB.rowCount
+        let rows = responseDB.rows
+        let respondeJSON = {}
+        respondeJSON.ok = true
+        respondeJSON.message = 'Aplicar convocatoria Ok'
+        respondeJSON.info = rows
+        respondeJSON.metainfo = {total: rowCount}
+        response.send(respondeJSON);
+    }catch (error) {
+        let responseJSON = {};
+        responseJSON.ok = false;
+        responseJSON.message = "Error while create get convocatoria.";
+        responseJSON.info = error;
+        response.status(400).send(responseJSON);
+    }
 }; 
 
 const postAplicarConvo = async (request, response) => {

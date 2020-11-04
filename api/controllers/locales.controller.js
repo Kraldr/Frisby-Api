@@ -22,17 +22,6 @@ const getLocal =  async (request, response) => {
         responseJSON.info = error;
         response.status(400).send(responseJSON);
     }
-    const sql = 'SELECT * FROM LOCALES'
-    let responseDB = await _servicepg.execute(sql)
-    let rowCount = responseDB.rowCount
-    let rows = responseDB.rows
-
-    let respondeJSON = {}
-    respondeJSON.ok = true
-    respondeJSON.message = 'Locales Ok'
-    respondeJSON.info = rows
-    respondeJSON.metainfo = {total: rowCount}
-    response.send(respondeJSON);
 }; 
 
 const postLocal = async (request, response) => {
