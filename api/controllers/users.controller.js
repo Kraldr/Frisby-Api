@@ -19,6 +19,7 @@ const getUsers =  async (request, response) => {
         respondeJSON.message = 'Users Ok'
         respondeJSON.info = rows
         respondeJSON.metainfo = {total: rowCount}
+        console.log(respondeJSON)
         response.send(respondeJSON);
     }catch (error) {
         let responseJSON = {};
@@ -33,9 +34,10 @@ const getUsers =  async (request, response) => {
 
 const postUsers = async (request, response) => {
     try{
-    let sql = "INSERT INTO public.usuarios (ccusuario, tipo_identificacion, nombre, apellido, correo, celular, clave, idrol)"
-    sql += " VALUES ($1, $2, $3, $4, $5, $6, md5($7), $8);";
+    let sql = "INSERT INTO public.usuarios (ccusuario, tipo_identificacion, nombre, apellido, correo, celular, clave, idrol, accepted, cv)"
+    sql += " VALUES ($1, $2, $3, $4, $5, $6, md5($7), $8, $9, $10);";
     let body = request.body;
+    console.log(body)
     let values = [
         body.ccusuario,
         body.tipo_identificacion,
@@ -45,8 +47,9 @@ const postUsers = async (request, response) => {
         body.celular,
         body.clave,
         body.idrol,
+        body.accepted,
+        body.cv
     ];
-
     await _servicepg.execute(sql, values)
     let respondeJSON = {}
     respondeJSON.ok = true
@@ -113,7 +116,7 @@ const saveCV =  async (request, response) => {
         responseJSON.ok = false;
         responseJSON.message = "fileUpload CV.";
         responseJSON.info = archivo;
-        response.status(400).send(archivo);
+        response.send(responseJSON);
 
 
     }catch (error) {

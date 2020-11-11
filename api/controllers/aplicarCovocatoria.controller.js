@@ -4,7 +4,7 @@ const _servicepg = new ServicePostgres()
 const getAplicarConvo =  async (request, response) => {
 
     try {
-        const sql = 'SELECT * FROM APLICARCONVOCATORIA'
+        const sql = 'SELECT aplicarconvocatoria.idaplicarconvo, convocatoria.idconvo , usuarios.ccusuario, usuarios.nombre, usuarios.apellido, usuarios.correo FROM APLICARCONVOCATORIA INNER JOIN usuarios ON aplicarconvocatoria.ccusuario = usuarios.ccusuario INNER JOIN convocatoria ON aplicarconvocatoria.idconvo = convocatoria.idconvo'
         let responseDB = await _servicepg.execute(sql)
         let rowCount = responseDB.rowCount
         let rows = responseDB.rows
@@ -25,21 +25,20 @@ const getAplicarConvo =  async (request, response) => {
 
 const postAplicarConvo = async (request, response) => {
     try{
-    let sql = "INSERT INTO APLICARCONVOCATORIA (idaplicarconvo, idaplicarconvo, idconvo)"
-    sql += " VALUES ($1, $2, $3);";
-    let body = request.body;
-    let values = [
+        let sql = "INSERT INTO APLICARCONVOCATORIA (idaplicarconvo, ccusuario, idconvo)"
+        sql += " VALUES ($1, $2, $3);";
+        let body = request.body;
+        let values = [
         body.idaplicarconvo,
         body.ccusuario,
         body.idconvo
-    ];
-
-    await _servicepg.execute(sql, values)
-    let respondeJSON = {}
-    respondeJSON.ok = true
-    respondeJSON.message = 'Aplicar convocatoria created'
-    respondeJSON.info = body
-    response.send(respondeJSON);
+        ];
+        await _servicepg.execute(sql, values)
+        let respondeJSON = {}
+        respondeJSON.ok = true
+        respondeJSON.message = 'Aplicar convocatoria created'
+        respondeJSON.info = body
+        response.send(respondeJSON);
     }catch (error) {
         let responseJSON = {};
         responseJSON.ok = false;

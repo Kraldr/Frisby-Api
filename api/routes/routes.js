@@ -17,12 +17,12 @@ router.get('/api/v1', (request, response) => {
 });
 
 router
+    .post('/api/v1/users',  userController.postUsers)
     .post('/api/v1/login',  AuthController.loginUser)
+    .post('/api/v1/users/informacion',  userController.saveCV)
     .use("/", authController.middleware)
     .get('/api/v1/valid',  AuthController.validToken)
     .get('/api/v1/users', userController.getUsers)
-    .post('/api/v1/users',  userController.postUsers)
-    .post('/api/v1/users/informacion',  userController.saveCV)
     .put('/api/v1/users/:id',  userController.updateUser)
     .delete('/api/v1/users/:id',  userController.deleteUser)
 
@@ -40,6 +40,7 @@ router
     .post('/api/v1/local',  localController.postLocal)
     .put('/api/v1/local/:id',  localController.updateLocal)
     .delete('/api/v1/local/:id',  localController.deleteLocal)
+    .get('/api/v1/local/:id', localController.getLocalFiltrado)
 
     .get('/api/v1/convocatoria', ConvoController.getConvo)
     .post('/api/v1/convocatoria',  ConvoController.postConvo)

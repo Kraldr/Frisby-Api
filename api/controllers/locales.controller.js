@@ -24,6 +24,33 @@ const getLocal =  async (request, response) => {
     }
 }; 
 
+const getLocalFiltrado =  async (request, response) => {
+
+    try {
+        let id = request.params.id;
+        const sql = 'SELECT locales.idlocal, locales.nombrelocal, localidad.nombrelocalidad FROM LOCALES INNER JOIN LOCALIDAD ON locales.idlocalidad = localidad.idlocalidad WHERE localidad.idlocalidad = $1'
+        let values = [
+            id
+        ];
+        let responseDB = await _servicepg.execute(sql, values)
+        let rowCount = responseDB.rowCount
+        let rows = responseDB.rows
+
+        let respondeJSON = {}
+        respondeJSON.ok = true
+        respondeJSON.message = 'Locales filtro Ok'
+        respondeJSON.info = rows
+        respondeJSON.metainfo = {total: rowCount}
+        response.send(respondeJSON);
+    }catch (error) {
+        let responseJSON = {};
+        responseJSON.ok = false;
+        responseJSON.message = "Error while get local filtro.";
+        responseJSON.info = error;
+        response.status(400).send(responseJSON);
+    }
+}; 
+
 const postLocal = async (request, response) => {
     try{
     let sql = "INSERT INTO LOCALES (idlocal, nombrelocal, idlocalidad)"
@@ -111,4 +138,4 @@ const deleteLocal =  async (request, response) => {
     }
 };
 
-module.exports = { getLocal, postLocal, updateLocal, deleteLocal }
+module.exports = { getLocal, postLocal, updateLocal, deleteLocal, getLocalFiltrado }

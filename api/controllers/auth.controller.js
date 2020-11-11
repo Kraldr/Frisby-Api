@@ -6,9 +6,9 @@ const loginUser =  async (request, response) => {
     let respondeJSON = {}
     respondeJSON.ok = true
     try{
-      const sql = 'select nombre, apellido, correo, idrol from usuarios where usuarios.correo = $1 and usuarios.clave = md5($2);'
+      const sql = 'select ccusuario, nombre, apellido, correo, idrol from usuarios where usuarios.correo = $1 and usuarios.clave = md5($2);'
       let body = request.body;
-      let values = [body.correo, body.clave];
+      let values = [body.email, body.password];
       let responseDB = await _servicepg.execute(sql, values)
       let rowCount = responseDB.rowCount
       if (rowCount == 1) {
@@ -17,22 +17,18 @@ const loginUser =  async (request, response) => {
         respondeJSON.info = jwt.createToken(user);
         response.send(respondeJSON);
       }else {
+        respondeJSON.ok = false
         respondeJSON.message = 'Users not found'
         respondeJSON.info = [];
-        response.send(respondeJSON);
+        response.status(404).send(respondeJSON);
       }
-
-      let rows = responseDB.rows
-      rows = rows.map((x) => {
-        delete x.clave
-        return x;
-      });
-    }catch (error) {
-      responseJSON.ok = false;
-      responseJSON.message = "Error while valid login.";
-      responseJSON.info = error;
-      response.status(400).send(responseJSON);
-    }
+  }catch (error) {
+    responseJSON.ok = false;
+    responseJSON.message = "Error while valid login.";
+    responseJSON.info = error;
+    let body = request.body;
+    response.status(400).send(responseJSON);
+  }
 
     
 }; 
